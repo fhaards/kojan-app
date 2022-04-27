@@ -1,5 +1,6 @@
-import React, { Component, Fragment, useEffect, useState } from "react";
+import React, { Fragment} from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon, FilterIcon } from "@heroicons/react/solid";
 
@@ -131,7 +132,9 @@ export default class Food extends React.Component {
 
           <div className="grid grid-cols-2 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
             {items.slice(0, 20).map((item) => (
-              <a href="#" className="group">
+              <Link
+                to={`/food/detail/${item.idMeal}`}
+                className="group">
                 <div className="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
                   <img
                     src={item.strMealThumb}
@@ -145,7 +148,7 @@ export default class Food extends React.Component {
                 <h1 className="title-font sm:text-sm lg:text-lg text-xs font-bold text-slate-700 mb-3 uppercase font-bold tracking-wide">
                   {item.strMeal}
                 </h1>
-              </a>
+              </Link>
             ))}
           </div>
         </div>

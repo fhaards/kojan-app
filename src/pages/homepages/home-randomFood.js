@@ -1,9 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowRightLong,
   faArrowRight,
   faCircleArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
@@ -29,8 +28,8 @@ export default class HomeTopProducts extends React.Component {
   }
 
   componentDidMount() {
-    var url1 = "https://dummyjson.com/products";
-    var url2 = "https://foodbukka.herokuapp.com/api/v1/menu";
+    // var url1 = "https://dummyjson.com/products";
+    // var url2 = "https://foodbukka.herokuapp.com/api/v1/menu";
     var url3 =
       "https://www.themealdb.com/api/json/v1/1/search.php?f=b";
     axios.get(url3).then((res) => {

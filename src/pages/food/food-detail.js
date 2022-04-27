@@ -1,84 +1,89 @@
-import React from "react";
-export default function FoodDetail() {
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+
+const FoodDetail = () => {
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [detail, setDetail] = useState("");
+  const [area, setArea] = useState("");
+  const [foodImage, setFoodImage] = useState("");
+  const [ingredients, setIngredients] = useState(Array(20));
+  const [measure, setMeasure] = useState(Array(20));
+  const { id } = useParams();
+
+  useEffect(() => {
+    getProductById();
+  }, []);
+
+  const getProductById = async () => {
+    const response = await axios.get(
+      `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
+    );
+    const items = response.data.meals[0];
+
+    setName(items.strMeal);
+    setCategory(items.strCategory);
+    setDetail(items.strInstructions);
+    setFoodImage(items.strMealThumb);
+    setArea(items.strArea);
+    const ingredients = [];
+    const measure = [];
+    for (let i = 1; i <= 20; i++) {
+      ingredients.push(items[`strIngredient${i}`]);
+      measure.push(items[`strMeasure${i}`]);
+      setIngredients(ingredients);
+      setMeasure(measure);
+    }
+  };
+
   return (
-    <div className="sm:max-w-6xl px-5 lg:px-0  mx-auto py-24 grid items-center grid-cols-1 gap-y-16 gap-x-8 sm:px-6 sm:py-32 lg:max-w-6xl  lg:grid-cols-2">
-      <div>
-        <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-          Technical Specifications
-        </h2>
-        <p className="mt-4 text-gray-500">
-          The walnut wood card tray is precision milled to perfectly fit a stack
-          of Focus cards. The powder coated steel divider separates active cards
-          from new ones, or can be used to archive important task lists.
-        </p>
-
-        <dl className="mt-16 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 sm:gap-y-16 lg:gap-x-8">
-          <div className="border-t border-gray-200 pt-4">
-            <dt className="font-medium text-gray-900">Origin</dt>
-            <dd className="mt-2 text-sm text-gray-500">
-              Designed by Good Goods, Inc.
-            </dd>
-          </div>
-
-          <div className="border-t border-gray-200 pt-4">
-            <dt className="font-medium text-gray-900">Material</dt>
-            <dd className="mt-2 text-sm text-gray-500">
-              Solid walnut base with rare earth magnets and powder coated steel
-              card cover
-            </dd>
-          </div>
-
-          <div className="border-t border-gray-200 pt-4">
-            <dt className="font-medium text-gray-900">Dimensions</dt>
-            <dd className="mt-2 text-sm text-gray-500">
-              6.25&quot; x 3.55&quot; x 1.15&quot;
-            </dd>
-          </div>
-
-          <div className="border-t border-gray-200 pt-4">
-            <dt className="font-medium text-gray-900">Finish</dt>
-            <dd className="mt-2 text-sm text-gray-500">
-              Hand sanded and finished with natural oil
-            </dd>
-          </div>
-
-          <div className="border-t border-gray-200 pt-4">
-            <dt className="font-medium text-gray-900">Includes</dt>
-            <dd className="mt-2 text-sm text-gray-500">
-              Wood card tray and 3 refill packs
-            </dd>
-          </div>
-
-          <div className="border-t border-gray-200 pt-4">
-            <dt className="font-medium text-gray-900">Considerations</dt>
-            <dd className="mt-2 text-sm text-gray-500">
-              Made from natural materials. Grain and color vary with each item.
-            </dd>
-          </div>
-        </dl>
+    <section className="relative lg:max-w-6xl px-5 lg:px-0 mx-auto pt-5 pb-24">
+      <div className="mt-32">
+        <div className="mb-16 text-center">
+          <h2 className="title-font text-4xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            {name}
+          </h2>
+          <p className="text-yellow-400 font-medium uppercase tracking-widest">
+            {category} - {area}
+          </p>
+        </div>
+        <div className="mb-16">
+          <p className="text-md text-gray-700 font-bold tracking-wide uppercase">
+            Instructions
+          </p>
+          <p className="text-justify mt-4 text-gray-900">{detail}</p>
+        </div>
       </div>
-      <div className="grid grid-cols-2 grid-rows-2 gap-4 sm:gap-6 lg:gap-8">
-        <img
-          src="https://tailwindui.com/img/ecommerce-images/product-feature-03-detail-01.jpg"
-          alt="Walnut card tray with white powder coated steel divider and 3 punchout holes."
-          className="bg-gray-100 rounded-lg"
-        />
-        <img
-          src="https://tailwindui.com/img/ecommerce-images/product-feature-03-detail-02.jpg"
-          alt="Top down view of walnut card tray with embedded magnets and card groove."
-          className="bg-gray-100 rounded-lg"
-        />
-        <img
-          src="https://tailwindui.com/img/ecommerce-images/product-feature-03-detail-03.jpg"
-          alt="Side of walnut card tray with card groove and recessed card area."
-          className="bg-gray-100 rounded-lg"
-        />
-        <img
-          src="https://tailwindui.com/img/ecommerce-images/product-feature-03-detail-04.jpg"
-          alt="Walnut card tray filled with cards and card angled in dedicated groove."
-          className="bg-gray-100 rounded-lg"
-        />
+
+      <p className="mb-5 text-md text-gray-700 font-bold tracking-wide uppercase">
+        Ingredients
+      </p>
+
+      <div className="grid grid-cols-1 gap-y-16 gap-x-8 lg:max-w-6xl lg:grid-cols-3">
+        <div className="col-span-2">
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3 sm:gap-y-5 lg:gap-x-8">
+            {ingredients.map((v, i) => (
+              <div className="border border-slate-100 bg-slate-50 rounded-lg flex flex-col items-start p-4">
+                <dt className="font-semibold text-gray-500 ">{v}</dt>
+                <dd className="font-medium text-sm flex flex-col uppercase tracking-wide">
+                  {" "}
+                  - {measure[i]}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <div className="grid grid-cols-1 grid-rows-2 gap-4 sm:gap-6 lg:gap-8">
+          <img
+            src={foodImage}
+            alt="Walnut card tray with white powder coated steel divider and 3 punchout holes."
+            className="bg-gray-100 rounded-lg"
+          />
+        </div>
       </div>
-    </div>
+    </section>
   );
-}
+};
+
+export default FoodDetail;
